@@ -1,18 +1,22 @@
 {
-    "name": "onsenui-v2-react-minimum",
+    "name": "covid19update",
     "version": "4.0.7",
     "description": "",
     "dependencies": {
+        "axios": "^0.19.2",
+        "cordova-android": "^8.1.0",
         "cordova-custom-config": "5.1.0",
-        "cordova-plugin-geolocation": "4.0.1",
+        "cordova-plugin-geolocation": "^4.0.1",
         "cordova-plugin-splashscreen": "5.0.2",
         "cordova-plugin-whitelist": "1.3.3",
-        "google-map-react": "^1.1.7",
-        "monaca-plugin-monaca-core": "3.3.0",
+        "google-map-react": "^2.0.4",
+        "monaca-plugin-monaca-core": "^3.3.0",
         "onsenui": "2.10.8",
         "react": "^16.8.6",
         "react-dom": "^16.4.1",
-        "react-onsenui": "^1.11.2"
+        "react-iframe": "^1.8.0",
+        "react-onsenui": "^1.11.2",
+        "react-router-dom": "^5.2.0"
     },
     "scripts": {
         "preview": "npm run dev & npm run watch",
@@ -20,7 +24,8 @@
         "monaca:debug": "npm run watch",
         "dev": "webpack-serve --open",
         "build": "webpack --mode production",
-        "watch": "webpack --watch --mode production"
+        "watch": "webpack --watch --mode production",
+        "monaca:preview": "npm run dev"
     },
     "cordova": {
         "plugins": {
@@ -29,13 +34,17 @@
             "cordova-plugin-whitelist": {},
             "monaca-plugin-monaca-core": {},
             "cordova-plugin-geolocation": {}
-        }
+        },
+        "platforms": [
+            "android"
+        ]
     },
     "devDependencies": {
         "babel-core": "^6.26.3",
         "babel-loader": "^7.1.5",
         "babel-preset-env": "^1.7.0",
         "babel-preset-react": "^6.24.1",
+        "browser-sync": "^2.24.5",
         "cordova": "^9.0.0",
         "css-loader": "^1.0.0",
         "cssnano": "^4.0.1",

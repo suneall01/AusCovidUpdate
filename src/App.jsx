@@ -1,90 +1,97 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { Page, Button, Toolbar } from 'react-onsenui';
-import GoogleMapReact from 'google-map-react';
-import Marker from './Marker';
-
+import { Navigator, Page, Tabbar, Tab } from 'react-onsenui';
+import Map from './Map';
+import Table from './Table';
+import Axios from 'axios';
+//google key for map and geocoding
 const googleKey = 'AIzaSyBEBd4P9XdqxUpxFKemiwztVyVHsdeohDw';
-const getMapOptions = (maps) => {
-  return {
-    disableDefaultUI: true,
-    mapTypeControl: true,
-    streetViewControl: true,
-    styles: [{ featureType: 'poi', elementType: 'labels', stylers: [{ visibility: 'on' }] }],
-  };
-};
-
-class App extends React.Component {
-	constructor(props) {
-		super(props);
+//tab class
+class Tabs extends React.Component {
+	constructor() {
+		super();
 		this.state = {
-			currentPosition: {}
+			records: [],
+			lastIndex: 0
 		};
-		this.onMapSuccess = this.onMapSuccess.bind(this);
-		this.onMapError = this.onMapError.bind(this);
-  }
-  
-  
+	}
 
-	// Get geo coordinates
+	// Get data 
 	componentDidMount() {
-		if ('geolocation' in navigator) {
-			console.log('Available');
-			navigator.geolocation.getCurrentPosition(this.onMapSuccess, this.onMapError, { enableHighAccuracy: true });
-		} else {
-			console.log('Not Available');
-		}
-	}
+		//url for data
+		const url =
+			'https://cors-anywhere.herokuapp.com/https://data.nsw.gov.au/data/api/3/action/datastore_search?resource_id=21304414-1ff1-4243-a5d2-f52778048b29&limit=35';
 
-	// Success callback for get geo coordinates
-	onMapSuccess(position) {
-		const center = {
-			lat: position.coords.latitude,
-			lng: position.coords.longitude
-    };
-    
-		this.setState({
-			currentPosition: center
-    });
-		console.log('latitude is ' + position);
+		Axios.get(url)
+			.then((result) => {
+				if (result.data.success) {
+					const data = result.data.result.records;
+					if (data.length > 0) {
+						this.convertGeoCode(data);
+					} else {
+						alert('No data');
+					}
+				}
+			})
+			.catch((error) => console.error('Error:', error.message));
 	}
-
-	onMapError(error) {
-		alert('code: ' + error.code + '\n' + 'message: ' + error.message + '\n');
+	//convert to geo coordinates
+	convertGeoCode(data) {
+		data.map((item) => {
+			const baseUrl = 'https://maps.googleapis.com/maps/api/geocode/json?';
+			const address = 'address=' + item.lga_name19.split(' ')[0] + '+' + item.lhd_2010_name + '+' + item.postcode;
+			const apiKey = '&key=' + googleKey;
+			const geocodeURL = baseUrl + address + apiKey;
+			Axios.get(geocodeURL).then((result) => {
+				//setting lat and lng and id to the results
+				if (result.status == 200) {
+					const val = result.data.results[0];
+					item.name = val.formatted_address;
+					item.lat = val.geometry.location.lat;
+					item.lng = val.geometry.location.lng;
+					item.id = this.state.lastIndex;
+					this.setState({lastIndex: this.state.lastIndex + 1	})
+					console.log(val.geometry.location.lat);
+				}
+				return item;
+			});
+			this.setState({ records: data });
+		});
 	}
-
-	renderToolbar() {
-		return (
-			<Toolbar>
-				<div className="center">Covid19Update</div>
-			</Toolbar>
-		);
+	//function for rendering tabbar components
+	renderTabs() {
+		return [
+			{
+				content: <Map key="map"  data={this.state.records}  navigator={this.props.navigator} />,
+				tab: <Tab key="map" label="Map" icon="ion-ios-home-outline" />
+			},
+			{
+				content: <Table key="table" navigator={this.props.navigator} />,
+				tab: <Tab key="table" label="Table" icon="ion-ios-albums-outline" />
+			}
+			
+		];
 	}
-
+	//renders tab in screen
 	render() {
 		return (
-			<Page renderToolbar={this.renderToolbar}>
-				<div style={{ height: '100vh', width: '100%' }}>
-					<GoogleMapReact
-						bootstrapURLKeys={{ key: googleKey }}
-						defaultCenter={this.state.currentPosition}
-            defaultZoom={11}
-            options={getMapOptions}
-					>
-						<Marker lat={this.state.currentPosition.lat} lng={this.state.currentPosition.lng} name="My Marker" color="#707ED7"/>
-					</GoogleMapReact>
-				</div>
+			<Page>
+				<Tabbar renderTabs={this.renderTabs.bind(this)} />
 			</Page>
 		);
 	}
 }
+//app class
+export default class App extends React.Component {
+	//function for rendering page of the app
+	renderPage(route, navigator) {
+		const props = route.props || {};
+		props.navigator = navigator;
 
-// App.defaultProps = {
-// 	center: {
-// 		lat: 59.95,
-// 		lng: 30.33
-// 	},
-// 	zoom: 11
-// };
-
-export default App;
+		return React.createElement(route.component, props);
+	}
+	//render navigator with tab
+	render() {
+		return <Navigator initialRoute={{ component: Tabs }} renderPage={this.renderPage} />;
+	}
+}

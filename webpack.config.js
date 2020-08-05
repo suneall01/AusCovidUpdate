@@ -20,7 +20,7 @@ let webpackConfig = {
   },
 
   output: {
-    path: path.resolve(__dirname, 'www'),
+    path: path.resolve(__dirname, 'build'),
     filename: '[name].js',
   },
 

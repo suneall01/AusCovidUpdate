@@ -5,7 +5,7 @@ import GoogleMapReact from 'google-map-react';
 import Marker from './Marker';
 import Circle from './Circle';
 
-const googleKey = 'AIzaSyBEBd4P9XdqxUpxFKemiwztVyVHsdeohDw';
+const googleKey = process.env.GOOGLE_KEY;
 const getMapOptions = (maps) => {
 	return {
 		disableDefaultUI: true,
@@ -65,21 +65,21 @@ export default class Map extends React.Component {
 		return (
 			//whole screen page
 			<Page renderToolbar={this.renderToolbar}>
-				//full screen for google map
+				{/* full screen for google map */}
 				<div style={{ height: '100vh', width: '100%' }}>
 					<GoogleMapReact
 						bootstrapURLKeys={{ key: googleKey }}
 						defaultCenter={this.state.currentPosition}
 						defaultZoom={11}
 					>
-						//current location marker
+						{/* current location marker */}
 						<Marker
 							lat={this.state.currentPosition.lat}
 							lng={this.state.currentPosition.lng}
 							name="My Marker"
 							color="#707ED7"
 						/>
-						//other covid case markers list
+						{/* covid case markers list */}
 						{this.props.data.map((item) => (
 							<Circle key={item.id} lat={item.lat} lng={item.lng} name={item.name} color="red" />
 						))}

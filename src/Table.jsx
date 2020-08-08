@@ -14,7 +14,7 @@ export default class Table extends React.Component {
 	//fetch data from NSW website using axios library
 	componentDidMount() {
 		const url =
-			'https://cors-anywhere.herokuapp.com/https://data.nsw.gov.au/data/api/3/action/datastore_search?resource_id=21304414-1ff1-4243-a5d2-f52778048b29&limit=35';
+			'https://cors-anywhere.herokuapp.com/https://data.nsw.gov.au/data/api/3/action/datastore_search?resource_id=21304414-1ff1-4243-a5d2-f52778048b29';
 
 		Axios.get(url)
 			.then((result) => {
@@ -49,7 +49,7 @@ export default class Table extends React.Component {
 			//whole screen page
 			<Page renderToolbar={this.renderToolbar}>
 				<div>
-					//header for table
+					{/* header for table */}
 					<Row>
 						<Col>Date</Col>
 						<Col>PostCode</Col>
@@ -58,7 +58,7 @@ export default class Table extends React.Component {
 						<Col>lga_code </Col>
 						<Col>lga_name </Col>
 					</Row>
-					//covid case list transfered into table form
+					{/* covid case list transfered into table form */}
 					{this.state.records.map((item) => (
 						<div key={item.id}>
 							<Row>

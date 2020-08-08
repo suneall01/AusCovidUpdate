@@ -4,8 +4,10 @@ import { Navigator, Page, Tabbar, Tab } from 'react-onsenui';
 import Map from './Map';
 import Table from './Table';
 import Axios from 'axios';
+
 //google key for map and geocoding
-const googleKey = 'AIzaSyBEBd4P9XdqxUpxFKemiwztVyVHsdeohDw';
+const googleKey = process.env.GOOGLE_KEY;
+
 //tab class
 class Tabs extends React.Component {
 	constructor() {
@@ -20,7 +22,7 @@ class Tabs extends React.Component {
 	componentDidMount() {
 		//url for data
 		const url =
-			'https://cors-anywhere.herokuapp.com/https://data.nsw.gov.au/data/api/3/action/datastore_search?resource_id=21304414-1ff1-4243-a5d2-f52778048b29&limit=35';
+			'https://cors-anywhere.herokuapp.com/https://data.nsw.gov.au/data/api/3/action/datastore_search?resource_id=21304414-1ff1-4243-a5d2-f52778048b29';
 
 		Axios.get(url)
 			.then((result) => {

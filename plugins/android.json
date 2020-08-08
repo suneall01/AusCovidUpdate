@@ -8,16 +8,16 @@
   },
   "installed_plugins": {
     "cordova-custom-config": {
-      "PACKAGE_NAME": "com.example.helloworld"
+      "PACKAGE_NAME": "com.suneall01.auscovidupdate"
     },
     "cordova-plugin-splashscreen": {
-      "PACKAGE_NAME": "com.example.helloworld"
+      "PACKAGE_NAME": "com.suneall01.auscovidupdate"
     },
     "cordova-plugin-whitelist": {
-      "PACKAGE_NAME": "com.example.helloworld"
+      "PACKAGE_NAME": "com.suneall01.auscovidupdate"
     },
     "cordova-plugin-geolocation": {
-      "PACKAGE_NAME": "com.example.helloworld"
+      "PACKAGE_NAME": "com.suneall01.auscovidupdate"
     }
   },
   "dependent_plugins": {}
